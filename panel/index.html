@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Todo Pollos — Panel de gestión</title>
+<meta name="description" content="Panel de gestión de Todo Pollos: pedidos, stock, ventas y clientes.">
+<meta name="theme-color" content="#231F20">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="Panel Todo Pollos">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="color-scheme" content="only light">
+<meta name="darkreader-lock">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Todo Pollos">
+<meta property="og:title" content="Todo Pollos — Panel de gestión">
+<meta property="og:description" content="Pedidos, stock, ventas y clientes en un solo lugar. Ingresá con tu usuario.">
+<meta property="og:image" content="https://somosingenia.github.io/todopollos-demo/panel/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+html{color-scheme:only light;overflow-x:clip}html,body{margin:0;height:100%;background:#231F20;color:#fff;font-family:Montserrat,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+iframe{position:fixed;inset:0;width:100%;height:100%;border:0;background:#231F20}
+.aviso{position:fixed;top:.9rem;left:0;right:0;margin:0 auto;width:fit-content;z-index:5;display:flex;align-items:center;gap:.85rem;max-width:calc(100vw - 1.5rem);box-sizing:border-box;padding:.55rem .6rem .55rem .95rem;background:rgba(247,244,238,.94);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#1c1712;border:1px solid rgba(28,23,18,.09);border-radius:18px;box-shadow:0 14px 40px rgba(28,23,18,.22),0 2px 6px rgba(28,23,18,.08);font-family:'DM Sans',Montserrat,system-ui,sans-serif;font-size:.84rem;line-height:1.3;animation:avIn .6s cubic-bezier(.16,1,.3,1) .4s both}
+@keyframes avIn{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+.aviso .ic{flex:none;width:2rem;height:2rem;border-radius:50%;background:#B5683A;color:#ffffff;display:flex;align-items:center;justify-content:center}
+.aviso .ic svg{width:1rem;height:1rem}
+.aviso .tx{display:flex;flex-direction:column;gap:.1rem}
+.aviso .tx small{font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8a4a25}
+.aviso .tx span{color:#4a4338}
+.aviso .tx b{font-weight:700;color:#1c1712}
+.aviso .cp{flex:none;border:1px solid rgba(28,23,18,.16);background:#fff;color:#1c1712;border-radius:999px;font:inherit;font-weight:700;font-size:.76rem;padding:.42rem .8rem;cursor:pointer;transition:background .2s,transform .2s}
+.aviso .cp:hover{background:#f0ebe0}.aviso .cp:active{transform:scale(.95)}
+.aviso .x{flex:none;width:1.9rem;height:1.9rem;border:0;border-radius:50%;background:transparent;color:#6b6358;font-size:1.25rem;line-height:1;cursor:pointer}
+.aviso .x:hover{background:rgba(28,23,18,.07)}
+@media(max-width:520px){.aviso{gap:.6rem;padding:.5rem .45rem .5rem .7rem;font-size:.8rem}.aviso .cp{padding:.4rem .65rem}}
+.portada{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;padding:2rem;text-align:center}
+.portada img{width:min(300px,70vw);height:auto}
+.portada p{margin:0;color:#d8cdbb;max-width:32rem;line-height:1.5}
+.portada a{display:inline-block;background:#B5683A;color:#ffffff;font-weight:700;text-decoration:none;padding:.9rem 1.8rem;border-radius:999px}
+.portada small{color:#9a9488;max-width:30rem;line-height:1.5}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="aviso" id="aviso" hidden role="note">
+  <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+  <span class="tx"><small>Acceso a la demo</small><span>Tocá la tarjeta de <b id="avUsu"></b> · contraseña <b id="avClave"></b></span></span>
+  <button type="button" class="cp" id="avCp">Copiar</button>
+  <button type="button" class="x" id="avX" aria-label="Cerrar aviso">&times;</button>
+</div>
+<main class="portada" id="portada" hidden>
+  <img src="../assets/logo-blanco.png" style="max-width:220px" alt="Todo Pollos">
+  <p>Panel de gestión de Todo Pollos.</p>
+  <a href="./">Abrir el panel</a>
+  <small>Para instalarlo como aplicación: en el celular, abrí el menú del navegador y elegí «Agregar a la pantalla de inicio» (iPhone: botón Compartir, luego «Agregar a inicio»).</small>
+</main>
+<script>
+(function(){
+  var PANEL_URL = "https://script.google.com/macros/s/AKfycbwhECUbf_OeIAM_4wnCit65y1faNDUYvZgO0FgCjMtuF33D8Pr-Sk1z_ihJ5M7EXW1gBw/exec";
+  var q = location.search;
+  /* Aviso de demo: usuario y contraseña a la vista. Si CLAVE_DEMO queda vacía, el aviso no se muestra. */
+  var USUARIO_DEMO = "", CLAVE_DEMO = "";
+  var av = document.getElementById("aviso"), cerrado = false;
+  try{ cerrado = sessionStorage.getItem("tp_aviso") === "0"; }catch(e){}
+  if(CLAVE_DEMO && !cerrado && !/[?&]instalar=1/.test(q)){
+    document.getElementById("avUsu").textContent = USUARIO_DEMO;
+    document.getElementById("avClave").textContent = CLAVE_DEMO;
+    av.hidden = false;
+    var cp = document.getElementById("avCp");
+    cp.onclick = function(){ try{ navigator.clipboard.writeText(CLAVE_DEMO); cp.textContent = "Copiada"; setTimeout(function(){ cp.textContent = "Copiar"; }, 1600); }catch(e){} };
+    document.getElementById("avX").onclick = function(){ av.hidden = true; try{ sessionStorage.setItem("tp_aviso","0"); }catch(e){} };
+  }
+  if(/[?&]instalar=1/.test(q)){ document.getElementById("portada").hidden = false; return; } // portada para compartir: se ve el botón y las instrucciones
+  var f = document.createElement("iframe");
+  f.title = "Panel de gestión";
+  f.allow = "clipboard-write";
+  function abrir(){ f.src = PANEL_URL + (PANEL_URL.indexOf("?") > -1 ? "&" : "?") + "nb=-10&t=" + Date.now(); }
+  abrir();
+  document.body.appendChild(f);
+  /* El panel vive en otro dominio y no avisa cuando alguien entra. Se usa una señal indirecta: al tocar adentro del panel
+     (la tarjeta de la persona) el foco pasa al marco; 25 s después el aviso se desvanece solo. Si se recarga la página, vuelve. */
+  var tAviso = null;
+  function ocultarAviso(){
+    av.style.transition = "opacity .7s ease, transform .7s ease"; av.style.opacity = "0"; av.style.transform = "translateY(-12px)";
+    setTimeout(function(){ av.hidden = true; }, 750);
+  }
+  function programar(ms){ if(tAviso) clearTimeout(tAviso); tAviso = setTimeout(ocultarAviso, ms); }
+  window.addEventListener("blur", function(){ setTimeout(function(){ if(document.activeElement === f && !av.hidden) programar(20000); }, 50); });
+  /* En el celular el foco no siempre pasa al marco: por las dudas, el aviso se va solo a los 45 s de abrir la página. */
+  programar(45000);
+  // El panel pide recargarse cuando hay una versión nueva: se vuelve a abrir el marco.
+  window.addEventListener("message", function(e){ if(e.data && e.data.ingenia === "recargar") abrir(); });
+})();
+</script>
+</body>
+</html>

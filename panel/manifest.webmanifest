@@ -1,0 +1,27 @@
+{
+ "name": "Todo Pollos — Panel",
+ "short_name": "Panel Todo Pollos",
+ "start_url": "/todopollos-demo/panel/",
+ "scope": "/todopollos-demo/panel/",
+ "display": "standalone",
+ "background_color": "#231F20",
+ "theme_color": "#231F20",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512-maskable.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}
