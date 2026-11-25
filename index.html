@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Todo Pollos</title>
-<meta name="description" content="Todo Pollos: panel de gestión del local.">
+<meta name="description" content="Pollo fresco, empanadas, pizzas y congelados. Mirá el catálogo y armá tu pedido.">
 <meta name="theme-color" content="#231F20">
 <meta name="color-scheme" content="only light">
 <meta name="darkreader-lock">
@@ -16,26 +16,433 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Todo Pollos">
 <meta property="og:title" content="Todo Pollos">
-<meta property="og:description" content="Panel de gestión del local.">
+<meta property="og:description" content="Pollo fresco, empanadas, pizzas y congelados. Armá tu pedido.">
 <meta property="og:image" content="https://somosingenia.github.io/todopollos-demo/assets/compartir.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Figtree:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:only light}
-html{overflow-x:clip}
-body{margin:0;min-height:100vh;max-width:100vw;overflow-x:clip;background:#231F20;color:#fff;font-family:Montserrat,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;display:flex;align-items:center;justify-content:center;text-align:center}
-main{display:flex;flex-direction:column;align-items:center;gap:1.3rem;padding:2rem}
-img{width:min(240px,60vw);height:auto}
-p{margin:0;color:#d8d2a8;max-width:28rem;line-height:1.5}
-a{display:inline-block;background:#B5683A;color:#fff;font-weight:700;text-decoration:none;padding:.9rem 1.8rem;border-radius:999px}
+:root{
+  --char:#231F20; --char2:#2f2a2b; --bone:#EFEBB0; --paper:#FBF8E6; --wood:#B5683A; --wood-d:#8a4a25; --mute:#6f6a5a;
+  --display:'Big Shoulders Display','Arial Narrow',Impact,sans-serif;
+  --body:'Figtree',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  color-scheme:only light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip;scroll-padding-top:120px}
+body{margin:0;background:var(--char);color:var(--bone);font-family:var(--body);font-size:16px;line-height:1.5;overflow-x:clip;max-width:100vw;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--wood);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* encabezado */
+header.top{position:fixed;inset:0 0 auto 0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:12px clamp(16px,4vw,48px);background:rgba(35,31,32,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(239,235,176,.12)}
+header.top img{height:40px;width:auto}
+.cartbtn{display:flex;align-items:center;gap:10px;background:var(--bone);color:var(--char);border:0;border-radius:999px;padding:10px 18px;font-weight:700}
+.cartbtn b{font-family:var(--display);font-size:20px;line-height:1}
+.cartbtn .n{min-width:24px;height:24px;border-radius:12px;background:var(--wood);color:#fff;display:grid;place-items:center;font-size:13px;padding:0 6px}
+
+/* hero */
+.hero{position:relative;min-height:100svh;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:clamp(24px,5vw,80px);padding:120px clamp(16px,5vw,72px) 72px;overflow:hidden}
+.hero .marca{position:absolute;right:-8vw;bottom:-10vw;width:min(62vw,820px);opacity:.07;pointer-events:none}
+.hero h1{font-family:var(--display);font-weight:900;font-size:clamp(56px,9.4vw,150px);line-height:.88;letter-spacing:-.01em;margin:0 0 28px}
+.hero h1 span{display:block}
+.hero h1 .w{color:var(--wood)}
+.hero p{max-width:30rem;font-size:clamp(17px,1.6vw,20px);color:rgba(239,235,176,.82);margin:0 0 32px}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:15px 28px;font-weight:700;text-decoration:none;border:2px solid transparent;transition:transform .15s,background .15s}
+.btn:active{transform:scale(.97)}
+.btn.p{background:var(--wood);color:#fff}
+.btn.p:hover{background:var(--wood-d)}
+.btn.g{border-color:rgba(239,235,176,.4);color:var(--bone)}
+.btn.g:hover{background:rgba(239,235,176,.1)}
+
+/* ticket de balanza (lo memorable) */
+.slot{position:relative;justify-self:center;width:min(100%,380px);padding-bottom:4px}
+.ticket{background:var(--paper);color:var(--char);font-family:'Courier New',ui-monospace,monospace;padding:26px 24px 34px;position:relative;transform:rotate(1.6deg);box-shadow:0 30px 60px rgba(0,0,0,.45);
+  -webkit-mask:linear-gradient(#000 0 0) top/100% calc(100% - 12px) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/18px 12px repeat-x;
+  mask:linear-gradient(#000 0 0) top/100% calc(100% - 12px) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/18px 12px repeat-x}
+.ticket.imprime{animation:imprime 2.6s steps(22,end) both}
+@keyframes imprime{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+.ticket h3{font-family:var(--display);font-size:30px;letter-spacing:.02em;margin:0 0 2px;line-height:1}
+.ticket .sub{font-size:12px;color:var(--mute);margin:0 0 16px}
+.ticket .fila{display:flex;justify-content:space-between;gap:12px;border-top:1px dashed rgba(35,31,32,.35);padding:9px 0;font-size:14px}
+.ticket .total{font-family:var(--display);font-weight:900;font-size:54px;line-height:1;color:var(--wood-d);text-align:right;margin-top:6px}
+.ticket .pie{font-size:11px;color:var(--mute);text-align:center;margin-top:12px}
+
+/* cinta de categorías */
+.cinta{background:var(--wood);color:#fff;overflow:hidden;white-space:nowrap;padding:14px 0;border-block:1px solid rgba(0,0,0,.2)}
+.cinta div{display:inline-flex;gap:0;animation:cinta 38s linear infinite;will-change:transform}
+.cinta span{font-family:var(--display);font-weight:800;font-size:28px;padding:0 28px;line-height:1}
+.cinta i{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--char);align-self:center}
+@keyframes cinta{to{transform:translateX(-50%)}}
+
+/* catálogo */
+.cat{background:var(--bone);color:var(--char);padding:0 clamp(16px,5vw,72px) 96px}
+.nav{position:sticky;top:64px;z-index:30;margin:0 calc(-1 * clamp(16px,5vw,72px));padding:12px clamp(16px,5vw,72px);background:var(--bone);border-bottom:1px solid rgba(35,31,32,.15);display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{flex:none;text-decoration:none;font-weight:700;padding:9px 18px;border-radius:999px;border:2px solid var(--char);font-size:15px;transition:background .15s,color .15s}
+.nav a.on,.nav a:hover{background:var(--char);color:var(--bone)}
+.sec{padding-top:72px}
+.sec h2{font-family:var(--display);font-weight:900;font-size:clamp(48px,8vw,112px);line-height:.9;margin:0 0 8px;letter-spacing:-.005em}
+.sec .cnt{margin:0 0 32px;color:var(--mute);font-weight:500}
+.sub h3{font-family:var(--display);font-weight:800;font-size:34px;margin:40px 0 16px;display:flex;align-items:center;gap:14px}
+.sub h3::after{content:"";flex:1;height:2px;background:rgba(35,31,32,.2)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px}
+.card{background:var(--paper);border:1px solid rgba(35,31,32,.14);border-radius:6px;overflow:hidden;display:flex;flex-direction:column}
+.card .foto{aspect-ratio:4/3;background:#fff;display:grid;place-items:center;overflow:hidden}
+.card .foto img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.card:hover .foto img{transform:scale(1.04)}
+.card .foto img.ph{object-fit:contain;width:46%;height:auto;opacity:.25}
+.card .cuerpo{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card h4{margin:0;font-size:18px;line-height:1.25;font-weight:700}
+.card p{margin:0;font-size:14px;color:var(--mute);flex:1}
+.precio{display:flex;align-items:baseline;gap:8px;margin-top:6px}
+.precio b{font-family:var(--display);font-weight:900;font-size:40px;line-height:1;color:var(--wood-d)}
+.precio small{font-size:13px;color:var(--mute)}
+.acc{margin-top:10px;min-height:46px}
+.add{width:100%;background:var(--char);color:var(--bone);border:0;border-radius:999px;padding:12px;font-weight:700;transition:background .15s}
+.add:hover{background:var(--wood-d)}
+.agotado{display:block;text-align:center;padding:12px;border-radius:999px;border:2px dashed rgba(35,31,32,.35);color:var(--mute);font-weight:700}
+.step{display:flex;align-items:center;justify-content:space-between;background:var(--char);color:var(--bone);border-radius:999px;padding:4px}
+.step button{width:40px;height:40px;border-radius:50%;border:0;background:var(--bone);color:var(--char);font-size:22px;font-weight:700;line-height:1}
+.step span{font-weight:700;font-size:16px}
+.estado{padding:80px 0;text-align:center;color:var(--mute)}
+.skel{height:300px;border-radius:6px;background:linear-gradient(100deg,#e6e1a6 30%,#f4f0c0 50%,#e6e1a6 70%);background-size:200% 100%;animation:sk 1.2s linear infinite}
+@keyframes sk{to{background-position:-200% 0}}
+
+/* pie */
+footer{padding:56px clamp(16px,5vw,72px) 40px;display:grid;gap:24px;grid-template-columns:1fr auto;align-items:end}
+footer img{height:64px;width:auto;margin-bottom:12px}
+footer p{margin:0;color:rgba(239,235,176,.7);max-width:26rem}
+footer .l{display:flex;flex-direction:column;gap:8px;text-align:right}
+footer a{color:var(--bone)}
+footer small{grid-column:1/-1;color:rgba(239,235,176,.5);border-top:1px solid rgba(239,235,176,.15);padding-top:20px}
+
+/* carrito */
+.vel{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:60;opacity:0;pointer-events:none;transition:opacity .25s}
+.vel.on{opacity:1;pointer-events:auto}
+.cart{position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);z-index:61;background:var(--paper);color:var(--char);transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;visibility:hidden}
+.cart.on{transform:none;visibility:visible}
+.cart header{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:2px dashed rgba(35,31,32,.3)}
+.cart header h2{font-family:var(--display);font-weight:900;font-size:36px;margin:0;line-height:1}
+.cart .x{background:none;border:0;font-size:32px;line-height:1;color:var(--char)}
+.cart .lineas{flex:1;overflow:auto;padding:8px 22px}
+.cart .vacio{padding:48px 0;text-align:center;color:var(--mute)}
+.ln{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:14px 0;border-bottom:1px dashed rgba(35,31,32,.25)}
+.ln b{font-weight:700}
+.ln .q{font-size:13px;color:var(--mute)}
+.ln .im{font-family:var(--display);font-weight:800;font-size:24px;text-align:right}
+.ln .step{grid-column:1/-1;max-width:150px;background:transparent;border:2px solid var(--char);color:var(--char)}
+.ln .step button{background:var(--char);color:var(--bone);width:34px;height:34px}
+.cart .pie{padding:16px 22px 22px;border-top:2px dashed rgba(35,31,32,.3);display:grid;gap:10px}
+.tot{display:flex;justify-content:space-between;align-items:baseline;font-weight:700}
+.tot b{font-family:var(--display);font-weight:900;font-size:44px;color:var(--wood-d);line-height:1}
+.cart input[type=text],.cart textarea{width:100%;font:inherit;font-size:16px;padding:12px 14px;border:2px solid rgba(35,31,32,.3);border-radius:8px;background:#fff;color:var(--char)}
+.cart .mod{display:flex;gap:8px}
+.cart .mod label{flex:1;text-align:center;border:2px solid var(--char);border-radius:999px;padding:10px;font-weight:700;cursor:pointer}
+.cart .mod input{position:absolute;opacity:0}
+.cart .mod input:checked+span{background:var(--char);color:var(--bone)}
+.cart .mod label{padding:0}
+.cart .mod span{display:block;padding:10px;border-radius:999px}
+.cart .nota{font-size:13px;color:var(--mute);margin:0}
+.send{background:#1f8f4e;color:#fff;border:0;border-radius:999px;padding:16px;font-weight:700;font-size:17px}
+.send:disabled{opacity:.45;cursor:not-allowed}
+
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;padding-top:104px;gap:36px}
+  .slot{width:min(100%,340px)}
+  footer{grid-template-columns:1fr}footer .l{text-align:left}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .cinta div{animation:none}
+  .ticket.imprime{animation:none}
+  .skel{animation:none}
+  .card .foto img,.cart,.vel{transition:none}
+}
 </style>
 </head>
 <body>
-<main>
-  <img src="assets/logo-blanco.png" alt="Todo Pollos">
-  <p>Panel de gestión de Todo Pollos: ventas del local, stock y números en un solo lugar.</p>
-  <a href="panel/">Abrir el panel</a>
+
+<header class="top">
+  <a href="#inicio" aria-label="Todo Pollos, inicio"><img src="assets/logo-blanco.png" alt="Todo Pollos"></a>
+  <button class="cartbtn" id="abrir" aria-label="Abrir tu pedido"><span>Tu pedido</span><span class="n" id="cn">0</span></button>
+</header>
+
+<main id="inicio">
+<section class="hero">
+  <img class="marca" src="assets/logo-blanco.png" alt="" aria-hidden="true">
+  <div>
+    <h1><span>Todo para</span><span>tu mesa,</span><span class="w">pesado al momento.</span></h1>
+    <p>Pollo fresco, empanadas, pizzas y congelados. Elegí lo que necesitás, cuánto querés llevar y mandá el pedido por WhatsApp.</p>
+    <div class="cta">
+      <a class="btn p" href="#catalogo">Ver el catálogo</a>
+      <a class="btn g" href="#" id="wa1">Escribinos por WhatsApp</a>
+    </div>
+  </div>
+  <div class="slot" aria-hidden="true">
+    <div class="ticket" id="tk">
+      <h3 id="tkn">Pollo entero</h3>
+      <p class="sub" id="tks">Pesado en balanza</p>
+      <div class="fila"><span>Peso</span><span id="tkp">1,000 kg</span></div>
+      <div class="fila"><span>Precio</span><span id="tkk">$0</span></div>
+      <div class="total" id="tkt">$0</div>
+      <div class="pie">Gracias por elegirnos</div>
+    </div>
+  </div>
+</section>
+
+<div class="cinta" aria-hidden="true"><div id="cinta"></div></div>
+
+<section class="cat" id="catalogo">
+  <nav class="nav" id="nav" aria-label="Categorías"></nav>
+  <div id="secs"><div class="sec"><div class="grid"><div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></div></div>
+</section>
 </main>
+
+<footer>
+  <div>
+    <img src="assets/logo-blanco.png" alt="Todo Pollos">
+    <p>Los precios y el stock se actualizan solos desde el panel de gestión del local.</p>
+  </div>
+  <div class="l">
+    <a href="#" id="wa2">WhatsApp</a>
+    <a href="panel/">Panel de gestión</a>
+  </div>
+  <small>Sitio de demostración hecho por iNGENIA.</small>
+</footer>
+
+<div class="vel" id="vel"></div>
+<aside class="cart" id="cart" aria-label="Tu pedido" role="dialog" aria-modal="true">
+  <header><h2>Tu pedido</h2><button class="x" id="cerrar" aria-label="Cerrar">&times;</button></header>
+  <div class="lineas" id="lineas"></div>
+  <div class="pie" id="pie">
+    <div class="tot"><span>Total estimado</span><b id="tot">$0</b></div>
+    <input type="text" id="nom" placeholder="Tu nombre" autocomplete="name">
+    <div class="mod">
+      <label><input type="radio" name="mod" value="retiro" checked><span>Retiro en el local</span></label>
+      <label><input type="radio" name="mod" value="envío"><span>Envío</span></label>
+    </div>
+    <input type="text" id="dir" placeholder="Dirección de entrega" autocomplete="street-address" hidden>
+    <p class="nota">Los productos por kilo se pesan al preparar el pedido, así que el total final puede variar un poco.</p>
+    <button class="send" id="enviar" disabled>Enviar pedido por WhatsApp</button>
+  </div>
+</aside>
+
+<script>
+(function(){
+"use strict";
+var PANEL_URL="https://script.google.com/macros/s/AKfycbwhECUbf_OeIAM_4wnCit65y1faNDUYvZgO0FgCjMtuF33D8Pr-Sk1z_ihJ5M7EXW1gBw/exec";
+var WA_DEFAULT="5493425154980";
+var RESPALDO=[{"productoId": "demo-1", "nombre": "Milanesa de pechuga", "categoria": "Pollo fresco", "subcategoria": "", "descripcion": "Precio por kilo.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/milanesadepechuga_e96d5d59-e6c0-4245-b3c1-9452b9a2318f.jpg?v=1789993979", "unidadMedida": "kg", "paso": 0.5, "decimales": 3, "precioBase": 17500.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-2", "nombre": "Filet de pechuga", "categoria": "Pollo fresco", "subcategoria": "", "descripcion": "Precio por kilo.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/filetdepechuga.png?v=1790862287", "unidadMedida": "kg", "paso": 0.5, "decimales": 3, "precioBase": 17500.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-3", "nombre": "Brochetas de pollo", "categoria": "Pollo fresco", "subcategoria": "", "descripcion": "Precio por kilo.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/brochet.png?v=1790685483", "unidadMedida": "kg", "paso": 0.5, "decimales": 3, "precioBase": 21000.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-4", "nombre": "Pata muslo", "categoria": "Pollo fresco", "subcategoria": "", "descripcion": "Precio por kilo.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/patamuslo.png?v=1790608299", "unidadMedida": "kg", "paso": 0.5, "decimales": 3, "precioBase": 10500.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-5", "nombre": "Pollo entero Calisa", "categoria": "Pollo fresco", "subcategoria": "", "descripcion": "Precio por kilo.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/pollocalisa.png?v=1790687213", "unidadMedida": "kg", "paso": 0.5, "decimales": 3, "precioBase": 7900.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-6", "nombre": "Empanadas de jamón y queso", "categoria": "Empanadas y pizzas", "subcategoria": "", "descripcion": "Masa artesanal, listas para cocinar.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/empandasjyq.png?v=1790779624", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 14000.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-7", "nombre": "Empanadas caseras de carne", "categoria": "Empanadas y pizzas", "subcategoria": "", "descripcion": "Congeladas, para hornear.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/empanadascarne.png?v=1790779347", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 14000.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-8", "nombre": "Empanadas Zën de jamón y quesos x 6", "categoria": "Empanadas y pizzas", "subcategoria": "", "descripcion": "Seis empanadas con muzzarella, jamón cocido natural, reggianito y provolone.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/empanadaszenjyq.png?v=1790607178", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 15000.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-9", "nombre": "Pizza de masa madre muzza", "categoria": "Empanadas y pizzas", "subcategoria": "", "descripcion": "Masa madre, salsa de tomate y mucha muzzarella.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/pizzamasamadremuzza.png?v=1790800217", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 15000.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-10", "nombre": "Pizzeta integral de muzzarella", "categoria": "Empanadas y pizzas", "subcategoria": "", "descripcion": "Harina integral, salsa de tomate y queso.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/pizzetaintegralmuzza.png?v=1790778505", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 8000.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-11", "nombre": "Croquetas de espinaca con queso", "categoria": "Congelados", "subcategoria": "Croquetas", "descripcion": "Paquete de 500 g.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/croquetasespinacaconqueso.png?v=1790605519", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 8900.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-12", "nombre": "Croquetas de papa con queso", "categoria": "Congelados", "subcategoria": "Croquetas", "descripcion": "Paquete de 500 g (el peso no figura en la web).", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/croquetasdepapaconquesomex.png?v=1790604975", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 8900.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-13", "nombre": "Papas noisette", "categoria": "Congelados", "subcategoria": "Papas", "descripcion": "Paquete de 500 g.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/papasnoisette.png?v=1790604238", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 9200.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-14", "nombre": "Hamburguesas de pollo y queso", "categoria": "Congelados", "subcategoria": "Hamburguesas", "descripcion": "Pack de 1 kg.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/hamburguesasdepolloyqueso.png?v=1790711611", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 16900.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-15", "nombre": "Nuggets de pollo Calisa 1 kg", "categoria": "Congelados", "subcategoria": "Rebozados", "descripcion": "Pack de 1 kg.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/nuggets.png?v=1790777903", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 16500.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-16", "nombre": "Milanesa de pollo Calisa pack familiar 1 kg", "categoria": "Congelados", "subcategoria": "Rebozados", "descripcion": "Pack familiar de 1 kg.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/milanesasdepollocongeladas.png?v=1790777480", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 16500.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-17", "nombre": "Choclo congelado ConoSud", "categoria": "Congelados", "subcategoria": "Verduras congeladas", "descripcion": "", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/choclocongelado.png?v=1790860711", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 7000.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-18", "nombre": "Frutillas congeladas Cono Sud 1 kg", "categoria": "Congelados", "subcategoria": "Frutas congeladas", "descripcion": "Paquete de 1 kg.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/frutillacongelada.png?v=1790860039", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 10000.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-19", "nombre": "Medallones UFF de calabaza y quinoa rellenos de muzzarella 700 g", "categoria": "Congelados", "subcategoria": "Medallones UFF", "descripcion": "Paquete de 700 g.", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/medallonesuffdecalabazayquinoa_0116bf51-9a02-4583-8a84-92450336aa82.jpg?v=1793739402", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 14000.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-20", "nombre": "Salsa BBQ Choví sabor intenso", "categoria": "Acompañamientos", "subcategoria": "", "descripcion": "", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/BBQchovi_0708acd4-08fd-4481-bd18-d5879faf4a5c.jpg", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 8560.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-21", "nombre": "Mostaza Heinz importada", "categoria": "Acompañamientos", "subcategoria": "", "descripcion": "", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/mostazaheinz_3151f857-4edd-4022-9ff9-fb25520c0b1b.jpg", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 11930.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-22", "nombre": "Chimichurri clásico Vanoli 190 g", "categoria": "Acompañamientos", "subcategoria": "", "descripcion": "", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/chimichurrivanoli.jpg", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 8540.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-23", "nombre": "Aceitunas verdes Cristo de los Cerros", "categoria": "Acompañamientos", "subcategoria": "", "descripcion": "", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/aceitunasverdes.jpg", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 6760.0, "presentaciones": [], "disponible": true, "alALaVenta": true}, {"productoId": "demo-24", "nombre": "Salsa de soja Hinomoto Premium 500 ml", "categoria": "Acompañamientos", "subcategoria": "", "descripcion": "", "imagenUrl": "https://cdn.shopify.com/s/files/1/1015/3325/4003/files/salsadesojahinomoto.jpg", "unidadMedida": "u", "paso": 1.0, "decimales": 0, "precioBase": 7300.0, "presentaciones": [], "disponible": true, "alALaVenta": true}];
+
+var $=function(s){return document.querySelector(s)};
+var ars=new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:0});
+var pesos=function(n){return ars.format(Number(n)||0)};
+var fmtQ=function(n){return Number(n).toLocaleString("es-AR",{maximumFractionDigits:3})};
+var esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
+var slug=function(s){return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")};
+
+var productos=[],config={},carrito={};
+
+function normalizar(p){
+  var pres=Array.isArray(p.presentaciones)?p.presentaciones:[];
+  var base=Number(p.precioBase!=null?p.precioBase:p.precio)||0;
+  var precios=pres.map(function(x){return Number(x.precio)}).filter(function(n){return n>0});
+  return{
+    id:p.productoId||p.id,nombre:p.nombre,
+    categoria:p.categoria||"Otros",subcategoria:p.subcategoria||"",
+    descripcion:p.descripcion||p.descripcionCorta||"",imagen:p.imagenUrl||"",
+    precio:pres.length&&precios.length?Math.min.apply(null,precios):base,
+    desde:pres.length>0&&precios.length>0,
+    paso:Number(p.paso)||1,decimales:Number(p.decimales)||0,
+    unidad:p.unidadMedida||"u",
+    disponible:p.disponible!==false&&p.estadoStock!=="sin_stock"&&p.alALaVenta!==false
+  };
+}
+
+function conTimeout(url,ms){
+  var c=("AbortController" in window)?new AbortController():null;
+  var t=setTimeout(function(){if(c)c.abort()},ms);
+  return fetch(url,c?{signal:c.signal}:{}).then(function(r){clearTimeout(t);return r.json()});
+}
+function cargar(){
+  return conTimeout(PANEL_URL+"?action=tienda",9000).then(function(d){
+    if(!d||!d.ok||!Array.isArray(d.productos)||!d.productos.length)throw new Error("vacío");
+    try{sessionStorage.setItem("tp_cat",JSON.stringify(d))}catch(e){}
+    return d;
+  });
+}
+function aplicar(d){
+  productos=d.productos.map(normalizar).filter(function(p){return p.id&&p.nombre});
+  config=d.config||{};
+  dibujar();
+}
+
+/* agrupar: las categorías y subcategorías salen de los productos */
+function agrupar(){
+  var cats=[],idx={};
+  productos.forEach(function(p){
+    if(!(p.categoria in idx)){idx[p.categoria]={nombre:p.categoria,subs:[],sidx:{}};cats.push(idx[p.categoria])}
+    var c=idx[p.categoria],k=p.subcategoria||"";
+    if(!(k in c.sidx)){c.sidx[k]={nombre:k,items:[]};c.subs.push(c.sidx[k])}
+    c.sidx[k].items.push(p);
+  });
+  cats.forEach(function(c){c.subs.sort(function(a,b){return (a.nombre===""?-1:0)-(b.nombre===""?-1:0)})});
+  return cats;
+}
+
+function tarjeta(p){
+  var u=p.unidad==="kg"?"por kilo":"por unidad";
+  var foto=p.imagen?'<img src="'+esc(p.imagen)+'" alt="'+esc(p.nombre)+'" loading="lazy" data-img>':'<img class="ph" src="assets/logo-negro.png" alt="">';
+  return '<article class="card" data-id="'+esc(p.id)+'"><div class="foto">'+foto+'</div><div class="cuerpo"><h4>'+esc(p.nombre)+'</h4>'+
+    (p.descripcion?'<p>'+esc(p.descripcion)+'</p>':'<p></p>')+
+    '<div class="precio"><b>'+(p.desde?"desde ":"")+pesos(p.precio)+'</b><small>'+u+'</small></div>'+
+    '<div class="acc" data-acc="'+esc(p.id)+'"></div></div></article>';
+}
+function accion(p){
+  if(!p.disponible)return '<span class="agotado">Sin stock</span>';
+  var q=carrito[p.id]||0;
+  if(!q)return '<button class="add" data-add="'+esc(p.id)+'">Agregar</button>';
+  return stepper(p,q);
+}
+function stepper(p,q){
+  return '<div class="step"><button data-menos="'+esc(p.id)+'" aria-label="Quitar">&minus;</button><span>'+fmtQ(q)+' '+(p.unidad==="kg"?"kg":"u")+'</span><button data-mas="'+esc(p.id)+'" aria-label="Sumar">+</button></div>';
+}
+
+function dibujar(){
+  var cats=agrupar();
+  $("#nav").innerHTML=cats.map(function(c){return '<a href="#c-'+slug(c.nombre)+'" data-cat="c-'+slug(c.nombre)+'">'+esc(c.nombre)+'</a>'}).join("");
+  var html="";
+  cats.forEach(function(c){
+    var total=c.subs.reduce(function(a,s){return a+s.items.length},0);
+    html+='<section class="sec" id="c-'+slug(c.nombre)+'"><h2>'+esc(c.nombre)+'</h2><p class="cnt">'+total+(total===1?" producto":" productos")+'</p>';
+    c.subs.forEach(function(s){
+      html+='<div class="sub">'+(s.nombre?'<h3>'+esc(s.nombre)+'</h3>':'')+'<div class="grid">'+s.items.map(tarjeta).join("")+'</div></div>';
+    });
+    html+='</section>';
+  });
+  $("#secs").innerHTML=html||'<div class="estado">Todavía no hay productos cargados.</div>';
+  productos.forEach(function(p){var a=document.querySelector('[data-acc="'+CSS.escape(p.id)+'"]');if(a)a.innerHTML=accion(p)});
+  document.querySelectorAll("img[data-img]").forEach(function(im){im.onerror=function(){im.onerror=null;im.src="assets/logo-negro.png";im.className="ph"}});
+  /* cinta */
+  var names=cats.map(function(c){return c.nombre});
+  var una=names.map(function(n){return "<span>"+esc(n)+"</span><i></i>"}).join("");
+  var rep=una;while(rep.length<2400&&names.length)rep+=una;
+  $("#cinta").innerHTML=rep+rep;
+  espiar();
+  pintarCarrito(true);
+  iniciarTicket();
+}
+
+/* scrollspy */
+var obs;
+function espiar(){
+  if(obs)obs.disconnect();
+  if(!("IntersectionObserver" in window))return;
+  obs=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        document.querySelectorAll("#nav a").forEach(function(a){a.classList.toggle("on",a.getAttribute("data-cat")===e.target.id)});
+        var on=document.querySelector("#nav a.on");if(on&&on.scrollIntoView)on.parentNode.scrollTo({left:on.offsetLeft-16,behavior:"smooth"});
+      }
+    });
+  },{rootMargin:"-30% 0px -60% 0px"});
+  document.querySelectorAll(".sec").forEach(function(s){obs.observe(s)});
+}
+
+/* carrito */
+function prod(id){for(var i=0;i<productos.length;i++)if(productos[i].id===id)return productos[i]}
+function redondear(p,n){var d=p.decimales||(p.paso%1?3:0);var f=Math.pow(10,d);return Math.round(n*f)/f}
+function cambiar(id,delta){
+  var p=prod(id);if(!p)return;
+  var q=redondear(p,(carrito[id]||0)+delta*p.paso);
+  if(q<=0)delete carrito[id];else carrito[id]=q;
+  var a=document.querySelector('[data-acc="'+CSS.escape(id)+'"]');if(a)a.innerHTML=accion(p);
+  pintarCarrito(false);
+}
+function items(){return Object.keys(carrito).map(function(id){return{p:prod(id),q:carrito[id]}}).filter(function(x){return x.p})}
+function total(){return items().reduce(function(a,x){return a+x.p.precio*x.q},0)}
+function pintarCarrito(){
+  var its=items(),n=its.length;
+  $("#cn").textContent=n;
+  $("#tot").textContent=pesos(total());
+  $("#enviar").disabled=!n;
+  $("#lineas").innerHTML=n?its.map(function(x){
+    return '<div class="ln"><div><b>'+esc(x.p.nombre)+'</b><div class="q">'+fmtQ(x.q)+(x.p.unidad==="kg"?" kg":" u")+' x '+pesos(x.p.precio)+'</div></div><div class="im">'+pesos(x.p.precio*x.q)+'</div>'+stepper(x.p,x.q)+'</div>';
+  }).join(""):'<div class="vacio">Todavía no agregaste nada. Elegí productos del catálogo y van a aparecer acá.</div>';
+}
+function abrir(v){$("#cart").classList.toggle("on",v);$("#vel").classList.toggle("on",v);if(v)setTimeout(function(){$("#cerrar").focus()},50)}
+function wa(){return String(config.whatsappNumero||WA_DEFAULT).replace(/\D/g,"")}
+function waLink(texto){return "https://wa.me/"+wa()+(texto?"?text="+encodeURIComponent(texto):"")}
+
+document.addEventListener("click",function(e){
+  var t=e.target.closest("[data-add],[data-mas],[data-menos]");
+  if(t){
+    if(t.hasAttribute("data-add"))cambiar(t.getAttribute("data-add"),1);
+    else if(t.hasAttribute("data-mas"))cambiar(t.getAttribute("data-mas"),1);
+    else cambiar(t.getAttribute("data-menos"),-1);
+  }
+});
+$("#abrir").onclick=function(){abrir(true)};
+$("#cerrar").onclick=function(){abrir(false)};
+$("#vel").onclick=function(){abrir(false)};
+document.addEventListener("keydown",function(e){if(e.key==="Escape")abrir(false)});
+document.querySelectorAll('input[name=mod]').forEach(function(r){r.onchange=function(){$("#dir").hidden=(document.querySelector('input[name=mod]:checked').value!=="envío")}});
+$("#enviar").onclick=function(){
+  var its=items();if(!its.length)return;
+  var mod=document.querySelector('input[name=mod]:checked').value;
+  var dir=$("#dir").value.trim(),nom=$("#nom").value.trim();
+  if(mod==="envío"&&!dir){$("#dir").focus();return}
+  var t="Hola! Quiero hacer este pedido:\n\n"+its.map(function(x){return "- "+x.p.nombre+": "+fmtQ(x.q)+(x.p.unidad==="kg"?" kg":" u")+" ("+pesos(x.p.precio*x.q)+")"}).join("\n")+
+    "\n\nTotal estimado: "+pesos(total())+"\n"+(mod==="envío"?"Envío a: "+dir:"Retiro en el local")+(nom?"\nNombre: "+nom:"");
+  window.open(waLink(t),"_blank","noopener");
+};
+function linkWa(){["#wa1","#wa2"].forEach(function(s){var a=$(s);a.href=waLink("Hola! Quería consultarles por unos productos.");a.target="_blank";a.rel="noopener"})}
+
+/* ticket de balanza */
+var tkTimer,tkI=0;
+function iniciarTicket(){
+  clearInterval(tkTimer);
+  var pool=productos.filter(function(p){return p.disponible&&p.precio>0});
+  if(!pool.length)return;
+  pool=pool.filter(function(p){return p.unidad==="kg"}).concat(pool.filter(function(p){return p.unidad!=="kg"}).slice(0,2));
+  var pesosOpc=[0.5,1,1.5,2];
+  function una(){
+    var p=pool[tkI%pool.length],kg=p.unidad==="kg",q=kg?pesosOpc[tkI%pesosOpc.length]:(1+(tkI%3));
+    tkI++;
+    $("#tkn").textContent=p.nombre.length>26?p.nombre.slice(0,25)+"…":p.nombre;
+    $("#tks").textContent=p.categoria+(p.subcategoria?" / "+p.subcategoria:"");
+    $("#tkp").textContent=kg?q.toFixed(3).replace(".",",")+" kg":q+" u";
+    $("#tkk").textContent=pesos(p.precio)+(kg?" /kg":" c/u");
+    $("#tkt").textContent=pesos(p.precio*q);
+    var tk=$("#tk");tk.classList.remove("imprime");void tk.offsetWidth;tk.classList.add("imprime");
+  }
+  una();
+  if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches)tkTimer=setInterval(una,5200);
+}
+
+/* arranque: primero lo guardado o el respaldo, después lo real */
+linkWa();
+var guardado=null;try{guardado=JSON.parse(sessionStorage.getItem("tp_cat")||"null")}catch(e){}
+aplicar(guardado&&guardado.productos?guardado:{productos:RESPALDO,config:{}});
+function refrescar(){cargar().then(function(d){
+  var antes=JSON.stringify(productos.map(function(p){return[p.id,p.precio,p.disponible,p.categoria,p.subcategoria,p.nombre]}));
+  var tmp=d.productos.map(normalizar);
+  var ahora=JSON.stringify(tmp.map(function(p){return[p.id,p.precio,p.disponible,p.categoria,p.subcategoria,p.nombre]}));
+  config=d.config||{};
+  if(antes!==ahora){carrito=Object.keys(carrito).reduce(function(o,k){if(tmp.some(function(p){return p.id===k}))o[k]=carrito[k];return o},{});productos=tmp;dibujar()}
+}).catch(function(){})}
+refrescar();
+document.addEventListener("visibilitychange",function(){if(!document.hidden)refrescar()});
+setInterval(refrescar,60000);
+})();
+</script>
 </body>
 </html>
